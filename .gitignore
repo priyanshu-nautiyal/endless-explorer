@@ -8,21 +8,5 @@ package-lock.json
 .env.production
 atlas-credentials.env
 
-# Logs
-logs/
-*.log
-npm-debug.log*
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Editor files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Build files
-dist/
-build/
+backend/uploads/*
+!backend/uploads/.gitkeep

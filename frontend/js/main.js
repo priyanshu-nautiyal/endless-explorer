@@ -275,7 +275,7 @@ function createPackageCard(pkg) {
   card.onclick = () => openPackageModal(pkg);
 
   const image = pkg.images && pkg.images[0]
-    ? (pkg.images[0].startsWith('http') ? pkg.images[0] : `http://localhost:5000${pkg.images[0]}`)
+    ? (pkg.images[0].startsWith('http') ? pkg.images[0] : pkg.images[0])
     : 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600';
 
   const stars = '★'.repeat(Math.floor(pkg.rating || 4)) + '☆'.repeat(5 - Math.floor(pkg.rating || 4));
@@ -453,7 +453,7 @@ function openPackageModal(pkg) {
   const content = document.getElementById('modalContent');
 
   const image = pkg.images && pkg.images[0]
-    ? (pkg.images[0].startsWith('http') ? pkg.images[0] : `http://localhost:5000${pkg.images[0]}`)
+    ? (pkg.images[0].startsWith('http') ? pkg.images[0] : pkg.images[0])
     : 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600';
 
   let itineraryHTML = '';

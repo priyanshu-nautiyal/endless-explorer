@@ -12,6 +12,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Multer setup for image upload
 const storage = multer.diskStorage({
@@ -244,6 +245,15 @@ app.get('/api/admin/stats', adminAuth, async (req, res) => {
 // Create uploads folder
 const fs = require('fs');
 if (!fs.existsSync('uploads')) fs.mkdirSync('uploads');
+
+// 👇 Frontend routes (API routes ke baad, listen se pehle)
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/index.html'));
+});
+
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/admin.html'));
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
