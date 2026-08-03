@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Endless Explorer | Explore The Unexplored</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- ========== NAVBAR ========== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <i class="fas fa-compass logo-icon"></i>
+        <span>Endless<strong>Explorer</strong></span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home" class="active">Home</a></li>
+        <li><a href="#packages">Packages</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="nav-cta">
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">
+          <i class="fas fa-moon"></i>
+          <i class="fas fa-sun"></i>
+        </button>
+        <a href="tel:+918679747167" class="nav-call-btn">
+          <i class="fas fa-phone"></i> Call Now
+        </a>
+      </div>
+      <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========== HERO SECTION WITH SLIDESHOW ========== -->
+  <section class="hero" id="home">
+    <div class="hero-bg">
+      <!-- Multiple background slides -->
+      <div class="hero-bg-slide active" style="background-image: url('assets/images/hero-1.jpg')"></div>
+      <div class="hero-bg-slide" style="background-image: url('assets/images/hero-2.jpg')"></div>
+      <div class="hero-bg-slide" style="background-image: url('assets/images/hero-3.jpg')"></div>
+      <div class="hero-bg-slide" style="background-image: url('assets/images/hero-4.jpg')"></div>
+      <div class="hero-bg-slide" style="background-image: url('assets/images/hero-5.jpg')"></div>
+      
+      <div class="hero-overlay"></div>
+      <div class="hero-particles" id="particles"></div>
+    </div>
+
+    <!-- Indicator Dots -->
+    <div class="hero-indicators" id="heroIndicators"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <i class="fas fa-mountain"></i> India's Trusted Travel Partner
+      </div>
+      <h1 class="hero-title">
+        <span class="line1">Explore The</span>
+        <span class="line2">Unexplored</span>
+        <span class="line3">With <em>Endless Explorer</em></span>
+      </h1>
+      <p class="hero-subtitle">
+        Customized tours to Goa, Manali, Kashmir, Kerala & 50+ destinations. 
+        Budget-friendly packages starting from <strong>₹4,999</strong>
+      </p>
+      <div class="hero-buttons">
+        <a href="#packages" class="btn btn-primary">
+          <i class="fas fa-compass"></i> Explore Packages
+        </a>
+        <a href="https://wa.me/918679747167?text=Hi! I want to plan a trip with Endless Explorer" 
+           target="_blank" class="btn btn-outline">
+          <i class="fab fa-whatsapp"></i> WhatsApp Us
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-number" data-count="500">0</div>
+          <div class="stat-label">Happy Travelers</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-count="50">0</div>
+          <div class="stat-label">Destinations</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-count="100">0</div>
+          <div class="stat-label">Tour Packages</div>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <div class="mouse">
+        <div class="wheel"></div>
+      </div>
+      <p>Scroll Down</p>
+    </div>
+  </section>
+
+  <!-- ========== SEARCH / FILTER BAR ========== -->
+  <section class="search-section">
+    <div class="container">
+      <div class="search-bar glass-card">
+        <div class="search-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <input type="text" id="searchInput" placeholder="Where do you want to go?">
+        </div>
+        <div class="search-item">
+          <i class="fas fa-filter"></i>
+          <select id="categoryFilter">
+            <option value="all">All Categories</option>
+            <option value="Beach">Beach</option>
+            <option value="Mountain">Mountain</option>
+            <option value="Adventure">Adventure</option>
+            <option value="Heritage">Heritage</option>
+            <option value="Honeymoon">Honeymoon</option>
+            <option value="Spiritual">Spiritual</option>
+          </select>
+        </div>
+        <div class="search-item">
+          <i class="fas fa-sort"></i>
+          <select id="sortFilter">
+            <option value="latest">Latest</option>
+            <option value="price-low">Price: Low → High</option>
+            <option value="price-high">Price: High → Low</option>
+            <option value="rating">Top Rated</option>
+          </select>
+        </div>
+        <button class="btn btn-primary search-btn" onclick="loadPackages()">
+          <i class="fas fa-search"></i> Search
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PACKAGES SECTION ========== -->
+  <section class="packages-section" id="packages">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag"><i class="fas fa-fire"></i> Popular Destinations</span>
+        <h2 class="section-title">Trending Tour <span class="highlight">Packages</span></h2>
+        <p class="section-subtitle">Handcrafted travel experiences for every kind of explorer</p>
+      </div>
+      <div class="packages-grid" id="packagesGrid"></div>
+      <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner"></div>
+        <p>Loading amazing destinations...</p>
+      </div>
+      <div class="no-packages" id="noPackages" style="display:none;">
+        <i class="fas fa-search"></i>
+        <h3>No packages found</h3>
+        <p>Try a different search or category</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== WHY CHOOSE US ========== -->
+  <section class="features-section" id="about">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag"><i class="fas fa-star"></i> Why Us</span>
+        <h2 class="section-title">Why Choose <span class="highlight">Endless Explorer</span></h2>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card glass-card">
+          <div class="feature-icon"><i class="fas fa-hand-holding-usd"></i></div>
+          <h3>Best Price Guarantee</h3>
+          <p>No hidden charges. What you see is what you pay. Budget-friendly trips for everyone.</p>
+        </div>
+        <div class="feature-card glass-card">
+          <div class="feature-icon"><i class="fas fa-headset"></i></div>
+          <h3>24/7 Support</h3>
+          <p>Call or WhatsApp us anytime. We're always there before, during & after your trip.</p>
+        </div>
+        <div class="feature-card glass-card">
+          <div class="feature-icon"><i class="fas fa-route"></i></div>
+          <h3>Customized Itinerary</h3>
+          <p>Don't like fixed plans? Tell us your vibe, we'll create a trip just for you.</p>
+        </div>
+        <div class="feature-card glass-card">
+          <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+          <h3>Safe & Trusted</h3>
+          <p>Verified hotels, trusted drivers, and a team that cares about your safety.</p>
+        </div>
+        <div class="feature-card glass-card">
+          <div class="feature-icon"><i class="fas fa-users"></i></div>
+          <h3>Group & Solo Trips</h3>
+          <p>Whether you're solo, couple, family, or a group — we've got the perfect plan.</p>
+        </div>
+        <div class="feature-card glass-card">
+          <div class="feature-icon"><i class="fas fa-camera-retro"></i></div>
+          <h3>Insta-Worthy Spots</h3>
+          <p>We include hidden gems & photography spots that most tourists miss.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== GALLERY ========== -->
+  <section class="gallery-section" id="gallery">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag"><i class="fas fa-images"></i> Memories</span>
+        <h2 class="section-title">Travel <span class="highlight">Gallery</span></h2>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item large">
+          <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800" alt="Mountains">
+          <div class="gallery-overlay"><span>Manali</span></div>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=600" alt="Beach">
+          <div class="gallery-overlay"><span>Goa</span></div>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1595815771614-ade9d652a65d?w=600" alt="Kashmir">
+          <div class="gallery-overlay"><span>Kashmir</span></div>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=600" alt="Kerala">
+          <div class="gallery-overlay"><span>Kerala</span></div>
+        </div>
+        <div class="gallery-item large">
+          <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800" alt="Rajasthan">
+          <div class="gallery-overlay"><span>Rajasthan</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CONTACT SECTION ========== -->
+  <section class="contact-section" id="contact">
+    <div class="container">
+      <div class="contact-wrapper glass-card">
+        <div class="contact-info">
+          <h2>Let's Plan Your <span class="highlight">Dream Trip</span></h2>
+          <p>Reach out to us and we'll get back within 30 minutes!</p>
+          <div class="contact-items">
+            <div class="contact-item">
+              <i class="fas fa-phone-alt"></i>
+              <div>
+                <h4>Call Us</h4>
+                <a href="tel:+918679747167">+91 8679747167</a>
+              </div>
+            </div>
+            <div class="contact-item">
+              <i class="fab fa-whatsapp"></i>
+              <div>
+                <h4>WhatsApp</h4>
+                <a href="https://wa.me/918679747167" target="_blank">+91 8679747167</a>
+              </div>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-envelope"></i>
+              <div>
+                <h4>Email</h4>
+                <a href="mailto:hello@endlessexplorer.com">hello@endlessexplorer.com</a>
+              </div>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <div>
+                <h4>Office</h4>
+                <p>Your City, India</p>
+              </div>
+            </div>
+          </div>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+        <form class="contact-form" id="contactForm" onsubmit="submitContact(event)">
+          <h3>Send us a message</h3>
+          <div class="form-group">
+            <input type="text" id="contactName" placeholder="Your Name" required>
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="form-group">
+            <input type="tel" id="contactPhone" placeholder="Phone Number" required>
+            <i class="fas fa-phone"></i>
+          </div>
+          <div class="form-group">
+            <input type="email" id="contactEmail" placeholder="Email (Optional)">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <div class="form-group">
+            <textarea id="contactMsg" rows="4" placeholder="Where do you want to go? How many people? Any dates in mind?" required></textarea>
+            <i class="fas fa-comment"></i>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">
+            <i class="fas fa-paper-plane"></i> Send Enquiry
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="footer-logo">
+            <i class="fas fa-compass"></i>
+            <span>Endless<strong>Explorer</strong></span>
+          </div>
+          <p>Your trusted travel partner for unforgettable adventures across India.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="#home">Home</a>
+          <a href="#packages">Packages</a>
+          <a href="#about">About Us</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Top Destinations</h4>
+          <a href="#">Goa</a>
+          <a href="#">Manali</a>
+          <a href="#">Kashmir</a>
+          <a href="#">Kerala</a>
+          <a href="#">Rajasthan</a>
+        </div>
+        <div class="footer-col">
+          <h4>Contact Info</h4>
+          <p><i class="fas fa-phone"></i> +91 8679747167</p>
+          <p><i class="fas fa-envelope"></i> hello@endlessexplorer.com</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Endless Explorer. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========== FLOATING BUTTONS ========== -->
+  <div class="floating-buttons">
+    <a href="tel:+918679747167" class="float-btn call-float" title="Call Us">
+      <i class="fas fa-phone-alt"></i>
+      <span class="float-label">Call</span>
+    </a>
+    <a href="https://wa.me/918679747167?text=Hi! I want to plan a trip with Endless Explorer" 
+       target="_blank" class="float-btn whatsapp-float" title="WhatsApp">
+      <i class="fab fa-whatsapp"></i>
+      <span class="float-label">WhatsApp</span>
+    </a>
+  </div>
+
+  <!-- ========== LEAD CAPTURE POPUP ========== -->
+  <div class="popup-overlay" id="leadPopup">
+    <div class="popup-card">
+      <button class="popup-close" onclick="closePopup()">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="popup-header">
+        <div class="popup-icon">
+          <i class="fas fa-mountain"></i>
+        </div>
+        <h3>Plan Your Dream Trip! 🎒</h3>
+        <p>Share your details & we'll call you within <strong>30 minutes</strong></p>
+      </div>
+      <form class="popup-form" onsubmit="submitPopupLead(event)">
+        <div class="popup-input-group">
+          <i class="fas fa-user"></i>
+          <input type="text" id="popupName" placeholder="Your Name" required>
+        </div>
+        <div class="popup-input-group">
+          <i class="fas fa-phone"></i>
+          <input type="tel" id="popupPhone" placeholder="WhatsApp Number" required>
+        </div>
+        <div class="popup-input-group">
+          <i class="fas fa-map-marker-alt"></i>
+          <textarea id="popupMsg" rows="2" placeholder="Kahaan jana hai? Kitne log?" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full popup-submit">
+          <i class="fas fa-paper-plane"></i> Get Free Quote
+        </button>
+      </form>
+      <div class="popup-footer">
+        <p><i class="fas fa-lock"></i> Your info is safe with us</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== PACKAGE DETAIL MODAL ========== -->
+  <div class="modal-overlay" id="packageModal">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeModal()">
+        <i class="fas fa-times"></i>
+      </button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

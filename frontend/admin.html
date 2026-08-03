@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | Endless Explorer</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* Admin-specific styles */
+    .admin-wrapper {
+      min-height: 100vh;
+      background: var(--dark);
+      padding: 20px;
+    }
+
+    .admin-login {
+      max-width: 400px;
+      margin: 100px auto;
+      text-align: center;
+    }
+
+    .admin-login h2 {
+      color: var(--white);
+      margin-bottom: 8px;
+      font-size: 28px;
+    }
+
+    .admin-login p {
+      color: var(--text-light);
+      margin-bottom: 30px;
+    }
+
+    .admin-login input {
+      width: 100%;
+      padding: 14px 20px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      color: var(--white);
+      font-size: 16px;
+      margin-bottom: 16px;
+      outline: none;
+    }
+
+    .admin-login input:focus {
+      border-color: var(--primary);
+    }
+
+    .admin-login .btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--glass-border);
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .admin-header h1 {
+      color: var(--white);
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .admin-header h1 i { color: var(--primary); }
+
+    .admin-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .admin-tab {
+      padding: 10px 24px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: 50px;
+      color: var(--text);
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-weight: 500;
+    }
+
+    .admin-tab:hover, .admin-tab.active {
+      background: var(--primary);
+      color: var(--white);
+      border-color: var(--primary);
+    }
+
+    /* Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      padding: 24px;
+      border-radius: var(--radius);
+      background: var(--dark-2);
+      border: 1px solid var(--glass-border);
+      text-align: center;
+      transition: var(--transition);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .stat-card .stat-icon {
+      font-size: 28px;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+
+    .stat-card .stat-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--white);
+    }
+
+    .stat-card .stat-name {
+      font-size: 13px;
+      color: var(--text-light);
+      margin-top: 4px;
+    }
+
+    /* Table */
+    .admin-table-wrapper {
+      overflow-x: auto;
+      border-radius: var(--radius);
+      border: 1px solid var(--glass-border);
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+
+    .admin-table th {
+      background: var(--dark-3);
+      color: var(--white);
+      padding: 14px 16px;
+      text-align: left;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .admin-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .admin-table tr:hover td {
+      background: rgba(0,102,255,0.05);
+    }
+
+    .status-badge {
+      padding: 4px 14px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-new { background: rgba(0,102,255,0.15); color: #4da6ff; }
+    .status-called { background: rgba(255,165,0,0.15); color: #ffa500; }
+    .status-confirmed { background: rgba(37,211,102,0.15); color: #25D366; }
+    .status-completed { background: rgba(128,128,128,0.15); color: #999; }
+
+    .action-btns {
+      display: flex;
+      gap: 6px;
+    }
+
+    .action-btn {
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    .action-btn.call { background: rgba(0,123,255,0.15); color: #007bff; }
+    .action-btn.whatsapp { background: rgba(37,211,102,0.15); color: #25D366; }
+    .action-btn.edit { background: rgba(255,165,0,0.15); color: #ffa500; }
+    .action-btn.delete { background: rgba(255,68,68,0.15); color: #ff4444; }
+
+    .action-btn:hover { transform: scale(1.1); }
+
+    /* Add Package Form */
+    .admin-form {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 30px;
+      background: var(--dark-2);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+    }
+
+    .admin-form h3 {
+      color: var(--white);
+      margin-bottom: 24px;
+      font-size: 22px;
+    }
+
+    .admin-form label {
+      display: block;
+      color: var(--text);
+      font-size: 14px;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .admin-form input,
+    .admin-form select,
+    .admin-form textarea {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      color: var(--white);
+      font-size: 15px;
+      margin-bottom: 16px;
+      outline: none;
+    }
+
+    .admin-form input:focus,
+    .admin-form select:focus,
+    .admin-form textarea:focus {
+      border-color: var(--primary);
+    }
+
+    .admin-form textarea { resize: vertical; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .admin-content { display: none; }
+    .admin-content.active { display: block; }
+
+    .no-data {
+      text-align: center;
+      padding: 60px;
+      color: var(--text-light);
+    }
+
+    .no-data i {
+      font-size: 48px;
+      margin-bottom: 12px;
+      opacity: 0.3;
+    }
+
+    .status-select {
+      padding: 6px 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      color: var(--white);
+      font-size: 13px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .status-select option {
+      background: var(--dark-2);
+    }
+
+    @media (max-width: 768px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .admin-tabs { gap: 6px; }
+      .admin-tab { padding: 8px 16px; font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-wrapper">
+    <div class="container">
+
+      <!-- Admin Login Gate -->
+      <div id="adminLogin" class="admin-login glass-card" style="padding:40px;">
+        <i class="fas fa-compass logo-icon" style="font-size:48px; color:var(--primary); margin-bottom:20px;"></i>
+        <h2>Admin Panel</h2>
+        <p>Endless Explorer Dashboard</p>
+        <input type="password" id="adminPassword" placeholder="Enter Admin Password" onkeypress="if(event.key==='Enter') adminLogin()">
+        <button class="btn btn-primary" onclick="adminLogin()">
+          <i class="fas fa-lock-open"></i> Login
+        </button>
+      </div>
+
+      <!-- Admin Dashboard (Hidden until login) -->
+      <div id="adminDashboard" style="display: none;">
+
+        <div class="admin-header">
+          <h1><i class="fas fa-compass"></i> Endless Explorer Admin</h1>
+          <div class="admin-tabs">
+            <button class="admin-tab active" onclick="switchTab('dashboard')">
+              <i class="fas fa-chart-bar"></i> Dashboard
+            </button>
+            <button class="admin-tab" onclick="switchTab('leads')">
+              <i class="fas fa-users"></i> Leads
+            </button>
+            <button class="admin-tab" onclick="switchTab('packages')">
+              <i class="fas fa-box"></i> Packages
+            </button>
+            <button class="admin-tab" onclick="switchTab('addPackage')">
+              <i class="fas fa-plus"></i> Add Package
+            </button>
+            <button class="admin-tab" onclick="adminLogout()" style="background:rgba(255,0,0,0.1); color:#ff4444; border-color:rgba(255,0,0,0.2);">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+          </div>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="tab-dashboard" class="admin-content active">
+          <div class="stats-grid" id="statsGrid">
+            <!-- JS se aayega -->
+          </div>
+          <h3 style="color:var(--white); margin-bottom:16px;">
+            <i class="fas fa-bell" style="color:var(--primary)"></i> Recent Leads
+          </h3>
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Phone</th>
+                  <th>Message</th>
+                  <th>Time</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="recentLeadsTable">
+                <!-- JS se aayega -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Leads Tab -->
+        <div id="tab-leads" class="admin-content">
+          <h3 style="color:var(--white); margin-bottom:16px;">
+            <i class="fas fa-users" style="color:var(--primary)"></i> All Leads
+          </h3>
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Phone</th>
+                  <th>Email</th>
+                  <th>Message</th>
+                  <th>Source</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="allLeadsTable">
+                <!-- JS se aayega -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Packages Tab -->
+        <div id="tab-packages" class="admin-content">
+          <h3 style="color:var(--white); margin-bottom:16px;">
+            <i class="fas fa-box" style="color:var(--primary)"></i> All Packages
+          </h3>
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Destination</th>
+                  <th>Price</th>
+                  <th>Duration</th>
+                  <th>Category</th>
+                  <th>Featured</th>
+                  <th>Active</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="packagesTable">
+                <!-- JS se aayega -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Add Package Tab -->
+        <div id="tab-addPackage" class="admin-content">
+          <form class="admin-form" id="addPackageForm" onsubmit="addPackage(event)">
+            <h3><i class="fas fa-plus-circle" style="color:var(--primary)"></i> Add New Package</h3>
+
+            <div class="form-row">
+              <div>
+                <label>Package Title *</label>
+                <input type="text" id="pkgTitle" placeholder="e.g. Goa Beach Paradise" required>
+              </div>
+              <div>
+                <label>Destination *</label>
+                <input type="text" id="pkgDestination" placeholder="e.g. Goa" required>
+              </div>
+            </div>
+
+            <label>Description *</label>
+            <textarea id="pkgDescription" rows="3" placeholder="Describe the trip..." required></textarea>
+
+            <div class="form-row">
+              <div>
+                <label>Price (₹) *</label>
+                <input type="number" id="pkgPrice" placeholder="e.g. 12000" required>
+              </div>
+              <div>
+                <label>Original Price (₹)</label>
+                <input type="number" id="pkgOriginalPrice" placeholder="e.g. 18000">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div>
+                <label>Duration *</label>
+                <input type="text" id="pkgDuration" placeholder="e.g. 5 Days 4 Nights" required>
+              </div>
+              <div>
+                <label>Group Size</label>
+                <input type="text" id="pkgGroupSize" placeholder="e.g. 2-15 People">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div>
+                <label>Category *</label>
+                <select id="pkgCategory" required>
+                  <option value="Adventure">Adventure</option>
+                  <option value="Beach">Beach</option>
+                  <option value="Mountain">Mountain</option>
+                  <option value="Heritage">Heritage</option>
+                  <option value="Honeymoon">Honeymoon</option>
+                  <option value="Spiritual">Spiritual</option>
+                </select>
+              </div>
+              <div>
+                <label>Difficulty</label>
+                <select id="pkgDifficulty">
+                  <option value="Easy">Easy</option>
+                  <option value="Moderate">Moderate</option>
+                  <option value="Challenging">Challenging</option>
+                </select>
+              </div>
+            </div>
+
+            <label>Highlights (comma separated)</label>
+            <input type="text" id="pkgHighlights" placeholder="e.g. Baga Beach, Water Sports, Old Goa">
+
+            <label>Inclusions (comma separated)</label>
+            <input type="text" id="pkgInclusions" placeholder="e.g. Hotel, Meals, Transport, Guide">
+
+            <label>Exclusions (comma separated)</label>
+            <input type="text" id="pkgExclusions" placeholder="e.g. Flights, Lunch, Personal Expenses">
+
+            <label>Itinerary (JSON format - optional)</label>
+            <textarea id="pkgItinerary" rows="4" placeholder='[{"day":1,"title":"Arrival","details":"Hotel check-in, local sightseeing"}]'></textarea>
+
+            <label>Package Images</label>
+            <input type="file" id="pkgImages" accept="image/*" multiple style="padding:10px;">
+
+            <div class="form-row">
+              <div>
+                <label>
+                  <input type="checkbox" id="pkgFeatured"> Mark as Featured / Trending
+                </label>
+              </div>
+              <div>
+                <label>
+                  <input type="checkbox" id="pkgActive" checked> Active (Visible on website)
+                </label>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full" style="margin-top:16px;">
+              <i class="fas fa-plus"></i> Add Package
+            </button>
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:5000/api';
+    let adminPass = '';
+
+    // ---------- LOGIN ----------
+    function adminLogin() {
+      const pass = document.getElementById('adminPassword').value;
+      if (!pass) return alert('Enter password');
+
+      adminPass = pass;
+
+      // Test the password
+      fetch(`${API_BASE}/admin/stats`, {
+        headers: { 'x-admin-password': adminPass }
+      })
+      .then(res => {
+        if (res.ok) {
+          document.getElementById('adminLogin').style.display = 'none';
+          document.getElementById('adminDashboard').style.display = 'block';
+          sessionStorage.setItem('adminPass', adminPass);
+          loadDashboard();
+        } else {
+          alert('❌ Wrong Password!');
+          adminPass = '';
+        }
+      })
+      .catch(() => alert('Server not connected! Make sure backend is running.'));
+    }
+
+    // Check session
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = sessionStorage.getItem('adminPass');
+      if (saved) {
+        adminPass = saved;
+        document.getElementById('adminLogin').style.display = 'none';
+        document.getElementById('adminDashboard').style.display = 'block';
+        loadDashboard();
+      }
+    });
+
+    function adminLogout() {
+      sessionStorage.removeItem('adminPass');
+      adminPass = '';
+      location.reload();
+    }
+
+    // ---------- TAB SWITCHING ----------
+    function switchTab(tab) {
+      document.querySelectorAll('.admin-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.admin-tab').forEach(el => el.classList.remove('active'));
+      document.getElementById(`tab-${tab}`).classList.add('active');
+      event.target.closest('.admin-tab').classList.add('active');
+
+      if (tab === 'dashboard') loadDashboard();
+      if (tab === 'leads') loadAllLeads();
+      if (tab === 'packages') loadAdminPackages();
+    }
+
+    // ---------- DASHBOARD ----------
+    async function loadDashboard() {
+      try {
+        const res = await fetch(`${API_BASE}/admin/stats`, {
+          headers: { 'x-admin-password': adminPass }
+        });
+        const stats = await res.json();
+
+        document.getElementById('statsGrid').innerHTML = `
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-value">${stats.totalLeads}</div>
+            <div class="stat-name">Total Leads</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-bell"></i></div>
+            <div class="stat-value">${stats.newLeads}</div>
+            <div class="stat-name">New Leads</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-phone"></i></div>
+            <div class="stat-value">${stats.calledLeads}</div>
+            <div class="stat-name">Called</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-value">${stats.confirmedLeads}</div>
+            <div class="stat-name">Confirmed</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-box"></i></div>
+            <div class="stat-value">${stats.activePackages}</div>
+            <div class="stat-name">Active Packages</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+            <div class="stat-value">${stats.todayLeads}</div>
+            <div class="stat-name">Today's Leads</div>
+          </div>
+        `;
+
+        // Load recent leads
+        const leadsRes = await fetch(`${API_BASE}/admin/leads`, {
+          headers: { 'x-admin-password': adminPass }
+        });
+        const leads = await leadsRes.json();
+
+        const recentLeads = leads.slice(0, 10);
+        document.getElementById('recentLeadsTable').innerHTML = recentLeads.length > 0
+          ? recentLeads.map(l => createLeadRow(l, false)).join('')
+          : '<tr><td colspan="6" class="no-data">No leads yet</td></tr>';
+
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // ---------- LEADS ----------
+    async function loadAllLeads() {
+      try {
+        const res = await fetch(`${API_BASE}/admin/leads`, {
+          headers: { 'x-admin-password': adminPass }
+        });
+        const leads = await res.json();
+
+        document.getElementById('allLeadsTable').innerHTML = leads.length > 0
+          ? leads.map(l => createLeadRow(l, true)).join('')
+          : '<tr><td colspan="8" class="no-data">No leads yet</td></tr>';
+
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function createLeadRow(lead, full) {
+      const date = new Date(lead.createdAt).toLocaleDateString('en-IN', {
+        day: '2-digit', month: 'short', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      });
+
+      const statusClass = `status-${lead.status}`;
+
+      if (full) {
+        return `
+          <tr>
+            <td style="color:var(--white); font-weight:600;">${lead.name}</td>
+            <td>${lead.phone}</td>
+            <td>${lead.email || '-'}</td>
+            <td style="max-width:200px;">${lead.message || '-'}</td>
+            <td>${lead.source}</td>
+            <td style="font-size:12px;">${date}</td>
+            <td>
+              <select class="status-select" onchange="updateLeadStatus('${lead._id}', this.value)">
+                <option value="new" ${lead.status === 'new' ? 'selected' : ''}>New</option>
+                <option value="called" ${lead.status === 'called' ? 'selected' : ''}>Called</option>
+                <option value="confirmed" ${lead.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                <option value="completed" ${lead.status === 'completed' ? 'selected' : ''}>Completed</option>
+              </select>
+            </td>
+            <td>
+              <div class="action-btns">
+                <a href="tel:${lead.phone}" class="action-btn call" title="Call"><i class="fas fa-phone"></i></a>
+                <a href="https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}" target="_blank" class="action-btn whatsapp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                <button class="action-btn delete" onclick="deleteLead('${lead._id}')" title="Delete"><i class="fas fa-trash"></i></button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }
+
+      return `
+        <tr>
+          <td style="color:var(--white); font-weight:600;">${lead.name}</td>
+          <td>${lead.phone}</td>
+          <td style="max-width:200px;">${lead.message || '-'}</td>
+          <td style="font-size:12px;">${date}</td>
+          <td><span class="status-badge ${statusClass}">${lead.status}</span></td>
+          <td>
+            <div class="action-btns">
+              <a href="tel:${lead.phone}" class="action-btn call"><i class="fas fa-phone"></i></a>
+              <a href="https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}" target="_blank" class="action-btn whatsapp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+          </td>
+        </tr>
+      `;
+    }
+
+    async function updateLeadStatus(id, status) {
+      try {
+        await fetch(`${API_BASE}/admin/leads/${id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-password': adminPass
+          },
+          body: JSON.stringify({ status })
+        });
+      } catch (err) {
+        alert('Error updating status');
+      }
+    }
+
+    async function deleteLead(id) {
+      if (!confirm('Delete this lead?')) return;
+      try {
+        await fetch(`${API_BASE}/admin/leads/${id}`, {
+          method: 'DELETE',
+          headers: { 'x-admin-password': adminPass }
+        });
+        loadAllLeads();
+        loadDashboard();
+      } catch (err) {
+        alert('Error deleting lead');
+      }
+    }
+
+    // ---------- PACKAGES ----------
+    async function loadAdminPackages() {
+      try {
+        const res = await fetch(`${API_BASE}/admin/packages`, {
+          headers: { 'x-admin-password': adminPass }
+        });
+        const packages = await res.json();
+
+        document.getElementById('packagesTable').innerHTML = packages.length > 0
+          ? packages.map(pkg => `
+            <tr>
+              <td style="color:var(--white); font-weight:600;">${pkg.title}</td>
+              <td>${pkg.destination}</td>
+              <td>₹${(pkg.price || 0).toLocaleString()}</td>
+              <td>${pkg.duration}</td>
+              <td>${pkg.category}</td>
+              <td>${pkg.featured ? '🔥 Yes' : 'No'}</td>
+              <td>${pkg.isActive ? '✅ Yes' : '❌ No'}</td>
+              <td>
+                <div class="action-btns">
+                  <button class="action-btn delete" onclick="deletePackage('${pkg._id}')" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `).join('')
+          : '<tr><td colspan="8" class="no-data">No packages yet. Add one!</td></tr>';
+
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function deletePackage(id) {
+      if (!confirm('Delete this package?')) return;
+      try {
+        await fetch(`${API_BASE}/admin/packages/${id}`, {
+          method: 'DELETE',
+          headers: { 'x-admin-password': adminPass }
+        });
+        loadAdminPackages();
+      } catch (err) {
+        alert('Error deleting package');
+      }
+    }
+
+    // ---------- ADD PACKAGE ----------
+    async function addPackage(event) {
+      event.preventDefault();
+
+      const data = {
+        title: document.getElementById('pkgTitle').value,
+        destination: document.getElementById('pkgDestination').value,
+        description: document.getElementById('pkgDescription').value,
+        price: parseInt(document.getElementById('pkgPrice').value),
+        originalPrice: parseInt(document.getElementById('pkgOriginalPrice').value) || null,
+        duration: document.getElementById('pkgDuration').value,
+        groupSize: document.getElementById('pkgGroupSize').value || 'Flexible',
+        category: document.getElementById('pkgCategory').value,
+        difficulty: document.getElementById('pkgDifficulty').value,
+        highlights: document.getElementById('pkgHighlights').value.split(',').map(s => s.trim()).filter(Boolean),
+        inclusions: document.getElementById('pkgInclusions').value.split(',').map(s => s.trim()).filter(Boolean),
+        exclusions: document.getElementById('pkgExclusions').value.split(',').map(s => s.trim()).filter(Boolean),
+        featured: document.getElementById('pkgFeatured').checked,
+        isActive: document.getElementById('pkgActive').checked,
+        rating: 4.5,
+        reviewCount: 0
+      };
+
+      // Parse itinerary
+      const itineraryStr = document.getElementById('pkgItinerary').value.trim();
+      if (itineraryStr) {
+        try {
+          data.itinerary = JSON.parse(itineraryStr);
+        } catch (e) {
+          alert('Itinerary JSON format galat hai! Example: [{"day":1,"title":"Day 1","details":"..."}]');
+          return;
+        }
+      }
+
+      const formData = new FormData();
+      formData.append('data', JSON.stringify(data));
+
+      const files = document.getElementById('pkgImages').files;
+      for (let i = 0; i < files.length; i++) {
+        formData.append('images', files[i]);
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/admin/packages`, {
+          method: 'POST',
+          headers: { 'x-admin-password': adminPass },
+          body: formData
+        });
+
+        if (res.ok) {
+          alert('✅ Package added successfully!');
+          document.getElementById('addPackageForm').reset();
+        } else {
+          alert('Error adding package');
+        }
+      } catch (err) {
+        alert('Server error! Make sure backend is running.');
+      }
+    }
+  </script>
+</body>
+</html>
