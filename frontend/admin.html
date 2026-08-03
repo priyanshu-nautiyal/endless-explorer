@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,120 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
+    /* Force Dark Theme for Admin */
+:root {
+  --primary: #ff8534 !important;
+  --primary-dark: #ff6b1a !important;
+  --primary-light: rgba(255, 107, 26, 0.15) !important;
+  --bg: #0f0f14 !important;
+  --bg-2: #1a1a22 !important;
+  --bg-3: #22222e !important;
+  --text: #e8e8ee !important;
+  --text-light: #a8a8b3 !important;
+  --text-lighter: #7a7a85 !important;
+  --card-bg: #1a1a22 !important;
+  --glass-border: rgba(255, 133, 52, 0.2) !important;
+  --border: #2a2a35 !important;
+}
+
+body {
+  background: #0f0f14 !important;
+  color: #e8e8ee !important;
+}
+
+.admin-wrapper {
+  background: #0f0f14 !important;
+}
+
+/* Stat cards visibility fix */
+.stat-card {
+  background: #1a1a22 !important;
+  border: 1px solid #2a2a35 !important;
+}
+
+.stat-card .stat-value {
+  color: #ffffff !important;
+}
+
+.stat-card .stat-name {
+  color: #a8a8b3 !important;
+}
+
+/* Table dark mode */
+.admin-table-wrapper {
+  background: #1a1a22 !important;
+  border: 1px solid #2a2a35 !important;
+}
+
+.admin-table th {
+  background: #22222e !important;
+  color: #ffffff !important;
+}
+
+.admin-table td {
+  color: #c8c8d0 !important;
+  border-color: #2a2a35 !important;
+}
+
+/* Form inputs */
+.admin-form {
+  background: #1a1a22 !important;
+  border: 1px solid #2a2a35 !important;
+}
+
+.admin-form input,
+.admin-form select,
+.admin-form textarea {
+  background: #22222e !important;
+  color: #ffffff !important;
+  border: 1px solid #2a2a35 !important;
+}
+
+.admin-form label {
+  color: #c8c8d0 !important;
+}
+
+/* Login page */
+.admin-login {
+  background: #1a1a22 !important;
+  border: 1px solid #2a2a35 !important;
+}
+
+.admin-login h2 {
+  color: #ffffff !important;
+}
+
+.admin-login input {
+  background: #22222e !important;
+  color: #ffffff !important;
+  border: 1px solid #2a2a35 !important;
+}
+
+/* Tabs */
+.admin-tab {
+  background: #22222e !important;
+  color: #c8c8d0 !important;
+  border: 1px solid #2a2a35 !important;
+}
+
+.admin-tab.active,
+.admin-tab:hover {
+  background: #ff8534 !important;
+  color: #ffffff !important;
+  border-color: #ff8534 !important;
+}
+
+.admin-header h1 {
+  color: #ffffff !important;
+}
+
+/* Status select */
+.status-select {
+  background: #22222e !important;
+  color: #ffffff !important;
+  border: 1px solid #2a2a35 !important;
+}
+    
     /* Admin-specific styles */
     .admin-wrapper {
       min-height: 100vh;
