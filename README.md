@@ -334,35 +334,11 @@ Status updated: New → Called → Confirmed
 
 ---
 
-## 📸 Screenshots
-
-> Add screenshots of your website here after taking them
-
-- Homepage with slideshow
-- Package cards grid
-- Popup form
-- Admin dashboard
-- Mobile responsive view
-
----
-
 ## 🐛 Known Issues
 
 - Images must be manually optimized before upload for best performance
 - Admin authentication uses basic password (recommend upgrading to JWT for production)
 - No email confirmation system currently
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to:
-1. Fork the project
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
 ---
 
 ## 👨‍💻 Author
